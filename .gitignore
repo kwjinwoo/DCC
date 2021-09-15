@@ -115,3 +115,7 @@ dmypy.json
 
 # dataset
 /data
+structure data/task2/jinwoo/catboost_info/catboost_training.json
+structure data/task2/jinwoo/catboost_info/learn/events.out.tfevents
+structure data/task2/jinwoo/catboost_info/learn_error.tsv
+structure data/task2/jinwoo/catboost_info/time_left.tsv

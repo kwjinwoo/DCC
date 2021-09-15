@@ -1,0 +1,7 @@
+test1 : FLAG_MOBIL 제거
+--> 정확히 동일하다. 즉, 제거하나 안하나 큰 차이가 없다.
+
+test2: family_size를 이산변수화
+--> loss가 오히려 높아져 버렸다...
+
+test3: 
