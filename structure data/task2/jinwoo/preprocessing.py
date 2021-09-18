@@ -11,5 +11,5 @@ def main(df_):
     df = df.drop(['FLAG_MOBIL'], axis=1)
 
     # one-hot
-    df = 
+    df =
     return df
