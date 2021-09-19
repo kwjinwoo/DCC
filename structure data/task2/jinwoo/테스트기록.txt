@@ -1,0 +1,16 @@
+test1 : FLAG_MOBIL 제거
+--> 정확히 동일하다. 즉, 제거하나 안하나 큰 차이가 없다.
+
+test2: family_size를 이산변수화
+--> loss가 오히려 높아져 버렸다...
+
+test3: 중복에 대해 duplicated 변수 추가
+--> loss 증가
+
+test4: 중복을 아예 제거
+--> loss 증가
+
+test5: family_size, child_num 이산화, 중복 컬럼 추가
+--> loss 증가
+
+test6: 
