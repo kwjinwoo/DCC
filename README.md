@@ -1,5 +1,4 @@
 # DCC
-Data create camp
 ##Computer Vision
     *Task1 : Fashion MNIST data를 가지고 image classification 구축(8.23 ~ 8.29)
     제한 사항 : CNN 모델 구조를 직접 구현 하는 것과 Xception 등의 구조를 활용(keras application 활용)것을 비교해 볼것. 
