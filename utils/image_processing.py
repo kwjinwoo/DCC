@@ -1,3 +1,8 @@
+"""
+이미지 처리 문제를 해결할 때 사용 할 수 있는 함수들
+이미지 처리는 tensorflow를 통해 처리한다고 가정하고 만듦
+made by jinwoo
+"""
 import tensorflow as tf
 from tensorflow import keras
 
