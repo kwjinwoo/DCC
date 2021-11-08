@@ -26,9 +26,9 @@ def make_aug_layer(rotation_factor=0.2, contrast_factor=0.4, seed=42):
 
 
 # 이미지 데이터를 resize 하고 scaling 하는 함수
-# dataset을 만들때 map에 사용
+# dataset을 만들때 map에 사용(batch 하기 전에 사용)
 # 이미지가 w * h * channel인 형태 기대
-# image_size : 변경할 이미지 크기. 튜플로 받음
+# image_size : 변경할 이미지 크기. 튜플로 받음(map 할때 전달 못하니까 사용 할때 마다 default를 바꿔줘야 할듯)
 # scaling_factor : scaling 시 나누어 줄 값. 이미지의 max 값을 넣음
 # 필요 module
 # import tensorflow as tf
