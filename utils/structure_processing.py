@@ -22,69 +22,84 @@ def basic_preprocess(df_, num_columns=None, label_columns=None, oh_columns=None,
                      scaler=None, oh_encoder=None):
     df = df_.copy()
     final_columns = []  # 최종 df column 이름 리스트
-    
+    final_dfs = []  # 최종 df_list
+
     # train mode
     if train:
         # scaling
-        scaler = StandardScaler()   # scaler 선언
-        num_df = df[num_columns]
-        num_sc = scaler.fit_transform(num_df)   # scaling
-        num_sc = pd.DataFrame(num_sc, columns=num_columns)  # df로 변환
-        final_columns.extend(num_columns)
-        
+        if num_columns:
+            scaler = StandardScaler()  # scaler 선언
+            num_df = df[num_columns]
+            num_sc = scaler.fit_transform(num_df)  # scaling
+            num_sc = pd.DataFrame(num_sc, columns=num_columns)  # df로 변환
+            final_columns.extend(num_columns)
+            final_dfs.append(num_sc)
+
         # label encoding
-        enc = LabelEncoder()    # label encoder 선언
-        label_df = df[label_columns]
-        # 각 변수에 대해 label encoding
-        for col in label_columns:
-            label_df[col] = enc.fit_transform(label_df[col])
-        final_columns.extend(label_columns)
-        
+        if label_columns:
+            enc = LabelEncoder()  # label encoder 선언
+            label_df = df[label_columns]
+            # 각 변수에 대해 label encoding
+            for col in label_columns:
+                label_df[col] = enc.fit_transform(label_df[col])
+            label_df.reset_index(drop=True, inplace=True)
+            final_columns.extend(label_columns)
+            final_dfs.append(label_df)
+
         # one hot encoding
-        oh_encoder = OneHotEncoder(sparse=False)    # one-hot encoder 선언. sparse matrix 생성 x
-        oh_df = df[oh_columns]
-        oh_df = oh_encoder.fit_transform(oh_df)
-        
-        # one-hot 변환 후 이름 생성
-        names = oh_encoder.categories_  # category들
-        columns = []
-        for pre, name in zip(oh_columns, names):
-            for i in range(len(name)):
-                temp = pre + '_' + name[i]  # 각 category에 원래 column 이름을 prefix로 붙여줌
-                columns.append(temp)
-        oh_df = pd.DataFrame(oh_df, columns=columns)    # df로 만들기
-        final_columns.extend(columns)
-        
+        if oh_columns:
+            oh_encoder = OneHotEncoder(sparse=False)  # one-hot encoder 선언. sparse matrix 생성 x
+            oh_df = df[oh_columns]
+            oh_df = oh_encoder.fit_transform(oh_df)
+
+            # one-hot 변환 후 이름 생성
+            names = oh_encoder.categories_  # category들
+            columns = []
+            for pre, name in zip(oh_columns, names):
+                for i in range(len(name)):
+                    temp = pre + '_' + name[i]  # 각 category에 원래 column 이름을 prefix로 붙여줌
+                    columns.append(temp)
+            oh_df = pd.DataFrame(oh_df, columns=columns)  # df로 만들기
+            final_columns.extend(columns)
+            final_dfs.append(oh_df)
+
         # 최종 df
-        final_df = pd.concat([num_sc, label_df, oh_df], axis=1, ignore_index=True)
+        final_df = pd.concat(final_dfs, axis=1, ignore_index=True)
         final_df.columns = final_columns
         return final_df, scaler, oh_encoder
     # test 모드
     else:
-        num_df = df[num_columns]
-        num_sc = scaler.transform(num_df)   # 전달 받은 scaler로 변환
-        num_sc = pd.DataFrame(num_sc, columns=num_columns)
-        final_columns.extend(num_columns)
+        if num_columns:
+            num_df = df[num_columns]
+            num_sc = scaler.transform(num_df)  # 전달 받은 scaler로 변환
+            num_sc = pd.DataFrame(num_sc, columns=num_columns)
+            final_columns.extend(num_columns)
+            final_dfs.append(num_sc)
 
-        enc = LabelEncoder()
-        label_df = df[label_columns]
-        for col in label_columns:
-            label_df[col] = enc.fit_transform(label_df[col])
-        final_columns.extend(label_columns)
+        if label_columns:
+            enc = LabelEncoder()
+            label_df = df[label_columns]
+            for col in label_columns:
+                label_df[col] = enc.fit_transform(label_df[col])
+            label_df.reset_index(drop=True, inplace=True)
+            final_columns.extend(label_columns)
+            final_dfs.append(label_df)
 
-        oh_df = df[oh_columns]
-        oh_df = oh_encoder.transform(oh_df) # 전달 받은 encoder로 변환
+        if oh_columns:
+            oh_df = df[oh_columns]
+            oh_df = oh_encoder.transform(oh_df)  # 전달 받은 encoder로 변환
 
-        names = oh_encoder.categories_
-        columns = []
-        for pre, name in zip(oh_columns, names):
-            for i in range(len(name)):
-                temp = pre + '_' + name[i]
-                columns.append(temp)
-        oh_df = pd.DataFrame(oh_df, columns=columns)
-        final_columns.extend(columns)
+            names = oh_encoder.categories_
+            columns = []
+            for pre, name in zip(oh_columns, names):
+                for i in range(len(name)):
+                    temp = pre + '_' + name[i]
+                    columns.append(temp)
+            oh_df = pd.DataFrame(oh_df, columns=columns)
+            final_columns.extend(columns)
+            final_dfs.append(oh_df)
 
-        final_df = pd.concat([num_sc, label_df, oh_df], axis=1, ignore_index=True)
+        final_df = pd.concat(final_dfs, axis=1, ignore_index=True)
         final_df.columns = final_columns
         return final_df
     
